@@ -17,6 +17,7 @@ pipeline {
                 }
             }
             steps {
+                sh 'docker rmi java-vulnerable-application'
                 sh 'docker build -t java-vulnerable-application:0.1 .'
             }
         }
