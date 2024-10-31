@@ -1,44 +1,44 @@
 pipeline {
-    agent any
+    agent any  // Use any available agent for the pipeline
     stages {
         stage('Check Node') {
             steps {
                 script {
-                    echo "Running on: ${env.NODE_NAME}"
+                    echo "Running on: ${env.NODE_NAME}"  // Outputs the name of the node
                 }
             }
         }
         stage('Maven Compile') {
             agent {
-                label 'Maven-Labels'  // Assumes Maven-Labels agent template is configured and available
+                label 'Maven-Labels'  // Runs on an agent labeled 'Maven-Labels'
             }
             steps {
-                sh 'mvn compile'
+                sh 'mvn compile'  // Compile the Maven project
             }
         }
         stage('Build Docker Image') {
             agent {
                 docker {
-                    image 'docker:latest'  // Base docker image; docker:dind isn't necessary here
+                    image 'docker:latest'  // Using Docker image
                     args '--privileged -u root -v /var/run/docker.sock:/var/run/docker.sock'
                 }
             }
             steps {
-                sh 'docker rmi java-vulnerable-application:0.1 || true'
-                sh 'docker build -t java-vulnerable-application:0.1 .'
+                sh 'docker rmi java-vulnerable-application:0.1 || true'  // Remove existing image if present
+                sh 'docker build -t java-vulnerable-application:0.1 .'  // Build the Docker image
             }
         }
         stage('Run Docker Image') {
             agent {
                 docker {
-                    image 'docker:latest'  // Using a docker image without dind for container control
+                    image 'docker:latest'  // Using Docker image
                     args '--privileged -u root -v /var/run/docker.sock:/var/run/docker.sock'
                 }
             }
             steps {
                 // Clean up any existing container with the same name
                 sh 'docker rm -f vulnerable-java-application || true' 
-                sh 'docker run --name vulnerable-java-application -p 9000:9000 -d java-vulnerable-application:0.1'
+                sh 'docker run --name vulnerable-java-application -p 9000:9000 -d java-vulnerable-application:0.1'  // Run the Docker container
             }
         }
     }
