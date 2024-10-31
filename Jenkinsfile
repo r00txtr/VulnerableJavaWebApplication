@@ -1,5 +1,14 @@
 pipeline {
-    agent none
+    agent any
+    stages {
+        stage('Check Node') {
+            steps {
+                script {
+                    echo "Running on: ${env.NODE_NAME}"
+                }
+            }
+        }
+    }
     stages {
         stage('Maven Compile') {
             agent {
