@@ -8,8 +8,6 @@ pipeline {
                 }
             }
         }
-    }
-    stages {
         stage('Maven Compile') {
             agent {
                 label 'Maven-Labels'  // Assumes Maven-Labels agent template is configured and available
@@ -26,7 +24,7 @@ pipeline {
                 }
             }
             steps {
-                sh 'docker rmi java-vulnerable-application'
+                sh 'docker rmi java-vulnerable-application:0.1 || true'
                 sh 'docker build -t java-vulnerable-application:0.1 .'
             }
         }
