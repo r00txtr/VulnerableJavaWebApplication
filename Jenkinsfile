@@ -8,7 +8,7 @@ pipeline {
                 }
             }
         }
-        stage('Software composition analysis (SCA)') {
+        stage('Software Composition Analysis (SCA)') {
             agent {
                 docker {
                     image 'owasp/dependency-check:latest'  
