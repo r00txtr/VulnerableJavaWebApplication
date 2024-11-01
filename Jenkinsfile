@@ -8,12 +8,18 @@ pipeline {
                 }
             }
         }
-        stage('Maven Compile') {
+        stage('Software composition analysis (SCA)') {
             agent {
-                label 'Maven-Labels'  // Runs on an agent labeled 'Maven-Labels'
+                docker {
+                    image 'owasp/dependency-check:latest'  
+                    args '--privileged -u root -v /var/run/docker.sock:/var/run/docker.sock --entrypoint='
+                }
             }
             steps {
-                sh 'mvn compile'  // Compile the Maven project
+                sh '/usr/share/dependency-check/bin/dependency-check.sh --scan . --project "VulnerableJavaWebApplication" --format ALL'
+                archiveArtifacts artifacts: 'dependency-check-report.html'
+                archiveArtifacts artifacts: 'dependency-check-report.json'
+                archiveArtifacts artifacts: 'dependency-check-report.xml'
             }
         }
         stage('Build Docker Image') {
@@ -38,7 +44,7 @@ pipeline {
             steps {
                 // Clean up any existing container with the same name
                 sh 'docker rm -f vulnerable-java-application || true' 
-                sh 'docker run --restart=on-failure --name vulnerable-java-application -p 9000:9000 -d java-vulnerable-application:0.1'  // Run the Docker container
+                sh 'docker run --name vulnerable-java-application -p 9000:9000 -d java-vulnerable-application:0.1'  // Run the Docker container
             }
         }
     }
