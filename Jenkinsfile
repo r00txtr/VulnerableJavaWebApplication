@@ -45,6 +45,7 @@ pipeline {
                 }
             }
             steps {
+                sh 'trufflehog --version'
                 sh 'trufflehog --no-update filesystem . --json > trufflehogscan.json'
                 sh 'cat trufflehogscan.json'
                 archiveArtifacts artifacts: 'trufflehogscan.json'
