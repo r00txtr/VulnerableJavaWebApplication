@@ -16,7 +16,9 @@ pipeline {
                 }
             }
             steps {
-                sh 'mvn compile spotbugs:spotbugs'
+                sh 'mvn clean compile spotbugs:spotbugs'
+                archiveArtifacts artifacts: 'target/spotbugs.html'
+                archiveArtifacts artifacts: 'target/spotbugsXml.xml'
             }
         }
         stage('Software Composition Analysis (SCA)') {
