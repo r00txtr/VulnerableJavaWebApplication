@@ -17,6 +17,7 @@ pipeline {
             }
             steps {
                 sh 'mvn compile'
+                sh 'apt-get update -y && apt-get install -y iputils-ping curl'
                 sh 'ping -c 1 github.com'
                 sh 'curl -I https://github.com'
             }
