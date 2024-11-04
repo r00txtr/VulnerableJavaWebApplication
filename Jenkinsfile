@@ -27,7 +27,7 @@ pipeline {
             agent {
                 docker {
                     image 'owasp/dependency-check:latest'  
-                    args '--privileged -u root -v /var/run/docker.sock:/var/run/docker.sock --entrypoint='
+                    args '--privileged -u root -v /var/run/docker.sock:/var/run/docker.sock -v my-docker-volume-dependency-check-data:/usr/share/dependency-check/data --entrypoint='
                 }
             }
             steps {
