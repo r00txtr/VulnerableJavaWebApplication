@@ -16,8 +16,6 @@ pipeline {
                 }
             }
             steps {
-                sh 'git config --global --unset credential.helper' 
-                sh 'git config --system --unset credential.helper'
                 sh 'mvn clean compile spotbugs:spotbugs'
                 archiveArtifacts artifacts: 'target/spotbugs.html'
                 archiveArtifacts artifacts: 'target/spotbugsXml.xml'
