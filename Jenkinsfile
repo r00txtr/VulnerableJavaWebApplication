@@ -17,7 +17,7 @@ pipeline {
             }
             steps {
                 sh 'mvn clean compile spotbugs:spotbugs'
-                archiveArtifacts artifacts: 'target/spotbugs.html'
+                archiveArtifacts artifacts: 'target/sites/spotbugs.html'
                 archiveArtifacts artifacts: 'target/spotbugsXml.xml'
             }
         }
