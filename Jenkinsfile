@@ -20,6 +20,7 @@ pipeline {
                 sh 'apt-get update -y && apt-get install -y iputils-ping curl'
                 sh 'ping -c 1 github.com'
                 sh 'curl -I https://github.com'
+                sh 'nslookup github.com'
             }
         }
         stage('Software Composition Analysis (SCA)') {
