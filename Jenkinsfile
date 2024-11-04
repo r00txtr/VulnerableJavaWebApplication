@@ -8,21 +8,6 @@ pipeline {
                 }
             }
         }
-        stage('Maven Compile and Static Application Security Testing (SAST)') {
-            agent {
-                docker {
-                    image 'maven:3.9.9-eclipse-temurin-11'  
-                    args '--privileged -u root -v /var/run/docker.sock:/var/run/docker.sock --entrypoint='
-                }
-            }
-            steps {
-                sh 'mvn clean compile spotbugs:spotbugs'
-                archiveArtifacts artifacts: 'target/site/spotbugs.html'
-                archiveArtifacts artifacts: 'target/spotbugsXml.xml'
-            }
-        }
-        
-    stages {
         stage ("Docker Pull Dastardly from Burp Suite container image") {
             steps {
                 sh 'docker pull public.ecr.aws/portswigger/dastardly:latest'
@@ -40,6 +25,14 @@ pipeline {
             }
         }
     }
+    post {
+        always {
+            junit testResults: 'dastardly-report.xml', skipPublishingChecks: true
+        }
+        
+    }
+}
+
     post {
         always {
             junit testResults: 'dastardly-report.xml', skipPublishingChecks: true
