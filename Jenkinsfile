@@ -8,7 +8,7 @@ pipeline {
                 }
             }
         }
-        stage('Maven Compile') {
+        stage('Maven Compile and Static Application Security Testing (SAST)') {
             agent {
                 docker {
                     image 'maven:3.9.9-eclipse-temurin-11'  
@@ -16,11 +16,7 @@ pipeline {
                 }
             }
             steps {
-                sh 'mvn compile'
-                sh 'apt-get update -y && apt-get install -y iputils-ping curl dnsutils'
-                sh 'ping -c 1 github.com'
-                sh 'curl -I https://github.com'
-                sh 'nslookup github.com'
+                sh 'mvn compile spotbugs:spotbugs'
             }
         }
         stage('Software Composition Analysis (SCA)') {
@@ -40,7 +36,7 @@ pipeline {
         stage('Secret Scanning') {
             agent {
                 docker {
-                    image 'ghcr.io/trufflesecurity/trufflehog:latest'  
+                    image 'trufflesecurity/trufflehog:latest'  
                     args '--privileged -u root -v /var/run/docker.sock:/var/run/docker.sock --entrypoint='
                 }
             }
