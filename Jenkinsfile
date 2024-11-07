@@ -71,5 +71,24 @@ pipeline {
                 sh 'docker run --name vulnerable-java-application -p 9000:9000 -d java-vulnerable-application:0.1'
             }
         }
+
+        stage('DAST') {
+            agent {
+                docker {
+                    image 'ghcr.io/zaproxy/zaproxy:stable'
+                    args '--privileged -u root -v /var/run/docker.sock:/var/run/docker.sock --entrypoint= -v .:/zap/wrk/:rw'
+                }
+            }
+            steps {
+                catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE'){
+                    sh 'zap-full-scan.py -t https://:9000 -r result-zap-full.html -x result-zap-full.xml'
+                }
+
+                sh 'cp /zap/wrk/result-zap-full.html ./result-zap-full.html'
+                sh 'cp /zap/wrk/result-zap-full.xml ./result-zap-full.xml'
+                archiveArtifacts artifacts: 'result-zap-full.html'
+                archiveArtifacts artifacts: 'result-zap-full.xml'
+            }
+        }
     }
 }
