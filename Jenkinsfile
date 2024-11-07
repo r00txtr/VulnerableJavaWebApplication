@@ -81,7 +81,7 @@ pipeline {
             }
             steps {
                 catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE'){
-                    sh 'zap-full-scan.py -t https://:9000 -r result-zap-full.html -x result-zap-full.xml'
+                    sh 'zap-full-scan.py -t https://172.18.0.3:9000 -r result-zap-full.html -x result-zap-full.xml'
                 }
 
                 sh 'cp /zap/wrk/result-zap-full.html ./result-zap-full.html'
