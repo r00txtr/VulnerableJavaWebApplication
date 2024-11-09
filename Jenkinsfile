@@ -46,19 +46,19 @@ pipeline {
             }
         }
         
-        // stage('Build Docker Image') {
-        //     agent {
-        //         docker {
-        //             image 'docker:latest'
-        //             args '--privileged -u root -v /var/run/docker.sock:/var/run/docker.sock'
-        //         }
-        //     }
-        //     steps {
-        //         echo 'Building Docker image...'
-        //         sh 'docker rmi java-vulnerable-application:0.1 || true'
-        //         sh 'docker build -t java-vulnerable-application:0.1 .'
-        //     }
-        // }
+        stage('Build Docker Image') {
+            agent {
+                docker {
+                    image 'docker:latest'
+                    args '--privileged -u root -v /var/run/docker.sock:/var/run/docker.sock'
+                }
+            }
+            steps {
+                echo 'Building Docker image...'
+                sh 'docker rmi java-vulnerable-application:0.1 || true'
+                sh 'docker build -t java-vulnerable-application:0.1 .'
+            }
+        }
         
         stage('Run Docker Image') {
             agent {
