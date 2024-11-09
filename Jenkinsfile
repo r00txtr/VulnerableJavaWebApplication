@@ -11,8 +11,11 @@ pipeline {
             steps {
                 echo 'Running Maven compile and SpotBugs analysis...'
                 sh 'mvn clean compile spotbugs:spotbugs'
+                sh 'pwd'
+                sh 'ls -la'
                 archiveArtifacts artifacts: 'target/site/spotbugs.html'
                 archiveArtifacts artifacts: 'target/spotbugsXml.xml'
+                
             }
         }
         
