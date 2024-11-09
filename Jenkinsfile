@@ -13,8 +13,10 @@ pipeline {
                 sh 'mvn clean compile spotbugs:spotbugs'
                 sh 'pwd'
                 sh 'ls -la'
-                archiveArtifacts artifacts: 'target/site/spotbugs.html'
-                archiveArtifacts artifacts: 'target/spotbugsXml.xml'
+                sh 'cp target/spotbugsXml.xml ./spotbugsXml.xml'
+                sh 'cp target/site/spotbugs.html ./spotbugs.html'
+                archiveArtifacts artifacts: 'spotbugs.html'
+                archiveArtifacts artifacts: 'spotbugsXml.xml'
                 
             }
         }
