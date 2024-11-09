@@ -91,4 +91,13 @@ pipeline {
             }
         }
     }
+    post {
+        always {
+            node ('Built-In')
+            sh 'curl -X POST https://demo.defectdojo.org/api/v2/import-scan/ -H "Authorization: Token d790edd5ce89395b4464647950c61d368d150b43" -F "scan_type=Trufflehog Scan" -F "file=@./trufflehogscan.json;type=application/json" -F "engagement=17"'
+            sh 'curl -X POST https://demo.defectdojo.org/api/v2/import-scan/ -H "Authorization: Token d790edd5ce89395b4464647950c61d368d150b43" -F "scan_type=Dependency Check Scan" -F "file=@./dependency-check-report.xml;type=text/xml" -F "engagement=17"'
+            sh 'curl -X POST https://demo.defectdojo.org/api/v2/import-scan/ -H "Authorization: Token d790edd5ce89395b4464647950c61d368d150b43" -F "scan_type=Spotbugs Scan" -F "file=@./spotbugsXml.xml;type=text/xml" -F "engagement=17"'
+            sh 'curl -X POST https://demo.defectdojo.org/api/v2/import-scan/ -H "Authorization: Token d790edd5ce89395b4464647950c61d368d150b43" -F "scan_type=ZAP Scan" -F "file=@./result-zap-full.xml;type=text/xml" -F "engagement=17"'
+        }
+    }
 }
